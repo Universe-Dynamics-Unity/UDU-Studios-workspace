@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Niveles - Zombie Tomb</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- MENÚ INICIAL EMERGENTE -->
+    <div id="setup-modal">
+        <div class="modal-content">
+            <h3>Configuración del Nivel</h3>
+            
+            <div class="input-group">
+                <label>Número de Nivel (ID):</label>
+                <input type="number" id="nivel-numero" placeholder="Ej. 1" required>
+            </div>
+
+            <div class="input-group">
+                <label>Nombre del Nivel:</label>
+                <input type="text" id="nombre" placeholder="Ej. The labyrinth of strategy" required>
+            </div>
+
+            <div class="input-group grid-inputs">
+                <div>
+                    <label>Ancho (Columnas):</label>
+                    <input type="number" id="ancho-mapa" placeholder="Ej. 20" required>
+                </div>
+                <div>
+                    <label>Alto (Filas):</label>
+                    <input type="number" id="alto-mapa" placeholder="Ej. 20" required>
+                </div>
+            </div>
+
+            <button class="btn-iniciar" onclick="iniciarNivel()">Crear Lienzo</button>
+            <div style="margin-top: 30px; padding-bottom: 5px; display: flex; justify-content: center; gap: 20px;">
+    <!-- Botón para cargar archivos existentes -->
+    <button class="btn-import" onclick="importarNivel()">📂 Importar JSON</button>
+    </div>
+        </div>
+    </div>
+    
+    <!-- CONTENEDOR DEL EDITOR -->
+    <div id="editor-container">
+        <button class="btn-volver" onclick="window.location.href='../../index.html'">⬅ Volver al Centro de Control</button>
+        <h2>Editor de Mapas: <span style="color: #0dff00;">Zombie Tomb</span></h2>
+        <h4 id="info-nivel" style="color: #0099ff;"></h4>
+        
+        <canvas id="mapCanvas"></canvas>
+        <!-- PALETA DE HERRAMIENTAS ABAJO DEL LIENZO -->
+    <div id="palette-container">
+    <div class="palette-item selected" onclick="seleccionarPincel('1', this)" style="background-color: #7a1a97">Pared (1)</div>
+    <div class="palette-item" onclick="seleccionarPincel('P', this)" style="background-color: #e2e9ec; color: black;">Jugador (P)</div>
+    <div class="palette-item" onclick="seleccionarPincel('0', this)" style="background-color: #d0ff00; color: black;">Puntos (0)</div>
+    <div class="palette-item" onclick="seleccionarPincel('m', this)" style="background-color: #ff7300;">Monedas (m)</div>
+    <div class="palette-item" onclick="seleccionarPincel('o', this)" style="background-color: #1c003d;">Vacío (o)</div>
+    <div class="palette-item" onclick="seleccionarPincel('Z', this)" style="background-color: #007940;">Zombie (Z)</div>
+    <div class="palette-item" onclick="seleccionarPincel('S', this)" style="background-color: #00f7ff; color: black;">Portal (S)</div>
+    </div>
+    </div>
+
+    <!-- BOTÓN PARA GENERAR EL ARCHIVO -->
+    <div style="margin-top: 30px; padding-bottom: 50px;">
+    <button class="btn-export" onclick="exportarNivel()">💾 Exportar Mapa de Zombie Tomb a lenguaje JSON</button>
+    </div>
+
+    <script src="brain.js"></script>
+</body>
+</html>
