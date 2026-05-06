@@ -1,0 +1,178 @@
+body { 
+            background-color: #000011; 
+            color: white; 
+            font-family: sans-serif; 
+            text-align: center; 
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Estilos del Modal (Menú Inicial) */
+        #setup-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 17, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #d400ff;
+            border-radius: 15px;
+            padding: 30px;
+            width: 350px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 153, 255, 0.2);
+        }
+
+        .modal-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #d400ff;
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%; /* Cambia 350px por 90% para que se adapte al cel[cite: 22] */
+    max-width: 400px; /* Evita que se vea gigante en PC */
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 153, 255, 0.2);
+}
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #fbff00;
+            font-size: 0.9em;
+        }
+
+        .input-group input {
+            width: 90%;
+            background: transparent;
+            border: 1px solid #d0ff00;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .grid-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-iniciar {
+            width: 100%;
+            background: rgba(0, 153, 255, 0.2);
+            color: #e5ff00;
+            border: 2px solid #b700ff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-iniciar:hover {
+            background: #ae00ff;
+            color: #000011;
+        }
+
+        /* Estilos del Editor (Ocultos inicialmente) */
+        #editor-container {
+            display: none;
+            padding: 20px;
+        }
+
+        canvas { 
+            border: 2px solid #0099ff; 
+            background-color: #000; 
+            cursor: crosshair; 
+            touch-action: none; 
+            margin-top: 20px;
+            touch-action: none; /* Esto ya lo tenías, ¡es vital![cite: 22] */
+            max-width: 100%;    /* AGREGA ESTO: Hace que el canvas se encoja en el cel[cite: 22] */
+            height: auto;       /* AGREGA ESTO: Mantiene la forma del mapa */
+        }
+
+        .btn-volver { 
+            background: #ff0000; 
+            color: white; 
+            padding: 10px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+            margin-bottom: 10px; 
+        }
+
+        #palette-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+    padding: 15px;
+}
+
+.palette-item {
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.palette-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Indica qué herramienta tienes activa */
+.palette-item.selected {
+    border-color: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.btn-export {
+    background: #0dff00; /* Verde brillante */
+    color: #000011;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(13, 255, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-export:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(13, 255, 0, 0.6);
+    background: #00f7ff; /* Cambia a azul al pasar el mouse */
+}
+
+.btn-import {
+    background: transparent;
+    color: #00f7ff;
+    border: 2px solid #00f7ff;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-import:hover {
+    background: rgba(0, 247, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+}

@@ -92,3 +92,45 @@ body {
         padding: 20px;
     }
 }
+
+/* --- AJUSTES PARA EL EDITOR DE ZOMBIE TOMB --- */
+
+/* Canvas Responsivo: Para que no se salga de la pantalla en el cel */
+#mapCanvas {
+    max-width: 100%; /* No permite que sea más ancho que el celular[cite: 20] */
+    height: auto;    /* Mantiene la proporción del mapa */
+    border: 2px solid #0099ff;
+    background-color: #000;
+    display: block;
+    margin: 20px auto;
+    touch-action: none; /* Vital para pintar sin que la página se mueva */
+}
+
+/* Modal Responsivo: Para que el menú de inicio no sea gigante */
+#setup-modal .modal-content {
+    width: 90%;       /* Ocupa casi todo el ancho en cel[cite: 20] */
+    max-width: 400px; /* Tamaño máximo en PC */
+    margin: auto;
+}
+
+/* Paleta de colores: Para que los botones se acomoden solitos */
+#palette-container {
+    display: flex;
+    flex-wrap: wrap; /* Si no caben, saltan a la siguiente línea[cite: 20] */
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+.palette-item {
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border: 2px solid transparent;
+}
+
+.palette-item.selected {
+    border-color: white; /* Brillo para el pincel activo */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}

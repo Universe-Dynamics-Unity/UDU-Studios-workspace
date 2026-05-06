@@ -1,4 +1,5 @@
  // Objeto global que almacenará la estructura JSON final
+        let estaPintando = false; // Nos dirá si el mouse/dedo está presionado
         let datosNivel = {
             nivel: 0,
             nombre: "",
@@ -147,35 +148,55 @@ function seleccionarPincel(tipo, elemento) {
 // --- SISTEMA DE PINTADO ---
 const canvas = document.getElementById('mapCanvas');
 
-// Escuchamos el clic (mouse) y el toque (dedo)
-canvas.addEventListener('mousedown', iniciarPintado);
-canvas.addEventListener('mousemove', pintarSiPresiona);
-
-function iniciarPintado(e) {
-    pintar(e);
-}
-
-function pintarSiPresiona(e) {
-    if (e.buttons === 1) { // Solo pinta si el botón izquierdo está presionado
-        pintar(e);
-    }
-}
-
-function pintar(e) {
+// 1. Nueva función para detectar el punto exacto donde tocas (corrigiendo la escala del cel)
+function obtenerCoordenadas(e) {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    // Calculamos en qué fila y columna de la matriz caímos
-    const col = Math.floor(x / tamañoTile);
-    const fila = Math.floor(y / tamañoTile);
+    // Calculamos la escala (por si el canvas se encogió en el celular)
+    const escalaX = canvas.width / rect.width;
+    const escalaY = canvas.height / rect.height;
 
-    // Si el clic está dentro de los límites, actualizamos la matriz y redibujamos
+    const x = (clienteX - rect.left) * escalaX;
+    const y = (clienteY - rect.top) * escalaY;
+
+    return {
+        col: Math.floor(x / tamañoTile),
+        fila: Math.floor(y / tamañoTile)
+    };
+}
+
+// 2. Función para pintar
+function procesarDibujo(e) {
+    const { col, fila } = obtenerCoordenadas(e);
+
     if (col >= 0 && col < columnas && fila >= 0 && fila < filas) {
-        matrizMapa[fila][col] = pincelActual;
-        dibujarLienzo(); // Redibuja solo el lienzo para mostrar el cambio
+        if (matrizMapa[fila][col] !== pincelActual) {
+            matrizMapa[fila][col] = pincelActual;
+            dibujarLienzo(); //
+        }
     }
 }
+
+// 3. Eventos de Mouse (PC)
+canvas.addEventListener('mousedown', (e) => { estaPintando = true; procesarDibujo(e); });
+window.addEventListener('mouseup', () => { estaPintando = false; });
+canvas.addEventListener('mousemove', (e) => { if (estaPintando) procesarDibujo(e); });
+
+// 4. Eventos de Touch (Celular - ¡Para pintar arrastrando!)
+canvas.addEventListener('touchstart', (e) => {
+    estaPintando = true;
+    procesarDibujo(e);
+    e.preventDefault(); // Evita que la pantalla se mueva mientras pintas[cite: 22]
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    if (estaPintando) procesarDibujo(e);
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { estaPintando = false; });
 
 async function exportarNivel() {
     // 1. Preparamos los datos del mapa
