@@ -87,7 +87,9 @@ const coloresPincel = {
     'o': '#1c003d', // Vacío total (Negro)
     'P': '#e2e9ec', // Jugador (Blanco)
     'Z': '#007940', // Zombie (Verde)
-    'S': '#00f7ff'  // Portal de salida (Cian)
+    'S': '#00f7ff', // Portal de salida (Cian)
+    'f': '#ff0000',
+    'W': 'rgb(21, 83, 54)'   
 };
 
 function prepararLienzo() {
