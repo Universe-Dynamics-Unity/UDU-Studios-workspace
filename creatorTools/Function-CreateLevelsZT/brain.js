@@ -82,13 +82,16 @@ const tamañoTile = 30; // Tamaño de cada cuadrito en el canvas
 // Luego puedes cambiarlos por imágenes reales del juego.
 const coloresPincel = {
     '1': '#7a1a97', // Pared (Morado)
-    '0': '#d0ff00', // Vacío con puntos (Amarillo)
-    'm': '#ff7300', // Moneda (Naranja)
+    '2': '#ff0000', // Pared 2 (Rojo)
+    '3': '#ffae00', // Pared 3 (Naranja)
+    '4': '#fffb18', // Pared 4 (Amarillo)
+    '0': '#d6da1e', // Vacío con puntos (Amarillo)
+    'm': '#1e0b74', // Moneda (Morado)
     'o': '#1c003d', // Vacío total (Negro)
     'P': '#e2e9ec', // Jugador (Blanco)
     'Z': '#007940', // Zombie (Verde)
     'S': '#00f7ff', // Portal de salida (Cian)
-    'f': '#ff0000',
+    'f': '#d30074',
     'W': 'rgb(21, 83, 54)'   
 };
 
