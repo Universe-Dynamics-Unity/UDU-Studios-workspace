@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de QR - UDU Studios Workspace</title>
+    <!-- Librerías desde CDN -->
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .app-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 1100px;
+        }
+        .panel-controls {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        /* Scrollbar personalizado para el panel */
+        .panel-controls::-webkit-scrollbar { width: 6px; }
+        .panel-controls::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        .panel-preview {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px dashed #334155;
+            min-height: 450px;
+        }
+        h2 { margin: 0 0 5px 0; color: #38bdf8; font-size: 24px; }
+        .subtitle { font-size: 12px; color: #64748b; margin-bottom: 15px; }
+        .control-group { text-align: left; }
+        label { font-size: 13px; color: #94a3b8; display: block; margin-bottom: 5px; font-weight: 600; }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            background-color: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, select:focus { border-color: #38bdf8; outline: none; }
+        .color-pickers { display: flex; gap: 10px; }
+        .color-item { flex: 1; }
+        input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+        
+        /* Contenedor del sticker/tarjeta QR Pro */
+        #qr-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        #qr-title-output {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-align: center;
+            word-break: break-word;
+            max-width: 250px;
+        }
+        #qrcode { display: flex; justify-content: center; }
+        #qr-text-output {
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            word-break: break-word;
+            max-width: 250px;
+        }
+        
+        .btn-download {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+        .btn-download:hover { opacity: 0.9; }
+
+        /* Estilo para simular el Modal del Anuncio */
+        #ad-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .ad-content {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #38bdf8;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        @media (max-width: 768px) {
+            .app-layout { flex-direction: column; }
+            .panel-controls { max-height: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <!-- Panel Izquierdo: Controles de Edición Pro -->
+        <div class="panel-controls">
+            <h2>Editor QR Gratuito 🎨</h2>
+            <div class="subtitle">Programado por Alan R.S...</div>
+            
+            <div class="control-group">
+                <label for="title-input">Nombre del Código QR (Aquí el título superior)</label>
+                <input type="text" id="title-input" value="UDU Evento" placeholder="Ej. Mi Negocio / WiFi">
+            </div>
+
+            <div class="control-group">
+                <label for="url-input">Enlace o Contenido (URL / Obligatorio)</label>
+                <input type="text" id="url-input" value="https://universe-dynamics-unity.github.io/UDU-Studios-Web/" placeholder="https://">
+            </div>
+
+            <div class="control-group">
+                <label for="text-input">Texto Inferior (Aparece debajo del QR)</label>
+                <input type="text" id="text-input" value="¡Escanea aquí!" placeholder="Ej. ¡Escanéame!">
+            </div>
+
+            <div class="control-group color-pickers">
+                <div class="color-item">
+                    <label for="color-dark">Color del QR y Texto</label>
+                    <input type="color" id="color-dark" value="#0f172a">
+                </div>
+                <div class="color-item">
+                    <label for="color-light">Fondo de la Tarjeta :D</label>
+                    <input type="color" id="color-light" value="#ffffff">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="bg-style">Fondo Chido / Estilo de Tarjeta :V</label>
+                <select id="bg-style">
+                    <option value="solid">Color Sólido Puro</option>
+                    <option value="gradient-pink">Gradiente Neón Rosa/Morado</option>
+                    <option value="gradient-sunset">Gradiente Atardecer Caliente</option>
+                    <option value="gradient-cyber">Gradiente Ciberpunk Azul/Verde</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="card-radius">Redondeado Personalizado de la Tarjeta, el que quieras</label>
+                <select id="card-radius">
+                    <option value="12px">Sutil (12px)</option>
+                    <option value="24px" selected>Normal (24px)</option>
+                    <option value="40px">Muy Redondeado (40px)</option>
+                    <option value="60px">MUY redondeado</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="dot-style">Estilo de Puntos del QR</label>
+                <select id="dot-style">
+                    <option value="square">Cuadrado clásico</option>
+                    <option value="rounded" selected>Puntos redondeados</option>
+                    <option value="extra-rounded">Súper redondeado</option>
+                    <option value="classy">Líneas Elegantes</option>
+                    <option value="classy-rounded">Elegante redondeado</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="corner-style">Estilo de los Marcos (Esquinas)</label>
+                <select id="corner-style">
+                    <option value="square">Cuadrados clásicos</option>
+                    <option value="dot">Puntos / Círculos</option>
+                    <option value="extra-rounded" selected>Redondeados Pro</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="margin-input">Margen interno del QR</label>
+                <select id="margin-input">
+                    <option value="0">Sin Margen (0px)</option>
+                    <option value="10" selected>Pequeño (10px)</option>
+                    <option value="25">Amplio (25px)</option>
+                </select>
+            </div>
+
+            <button class="btn-download" onclick="mostrarAnuncio()">Descargar QR :3</button>
+        </div>
+
+        <!-- Panel Derecho: Previsualización en Tiempo Real -->
+        <div class="panel-preview">
+            <div id="qr-card">
+                <div id="qr-title-output">UDU Evento</div>
+                <div id="qrcode"></div>
+                <div id="qr-text-output">¡Escanea aquí!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Simulador de Anuncio UDU Studios -->
+    <div id="ad-modal">
+        <div class="ad-content">
+            <h3 style="color: #38bdf8; margin-top:0;">📺 Anuncio Cortesía de UDU Studios</h3>
+            <p style="font-size: 14px; color: #94a3b8;">Tu descarga se habilitará en unos segundos...</p>
+            <h1 id="countdown" style="color: #f43f5e; font-size: 40px; margin: 10px 0;">5</h1>
+            <p style="font-size: 11px; color: #64748b;">(Apoyando a los devs locales jajaja)</p>
+        </div>
+    </div>
+    
+    <script>
+        let qrCodeInstance = null;
+
+        function actualizarQR() {
+            let titleText = document.getElementById("title-input").value;
+            let url = document.getElementById("url-input").value.trim() || " ";
+            let textBelow = document.getElementById("text-input").value;
+            let colorDark = document.getElementById("color-dark").value;
+            let colorLight = document.getElementById("color-light").value;
+            let bgStyle = document.getElementById("bg-style").value;
+            let cardRadius = document.getElementById("card-radius").value;
+            let dotStyle = document.getElementById("dot-style").value;
+            let cornerStyle = document.getElementById("corner-style").value;
+            let marginSize = parseInt(document.getElementById("margin-input").value);
+
+            const qrCard = document.getElementById("qr-card");
+            const qrTitleOutput = document.getElementById("qr-title-output");
+            const qrTextOutput = document.getElementById("qr-text-output");
+            
+            // Textos y visibilidad
+            qrTitleOutput.innerText = titleText;
+            qrTitleOutput.style.color = colorDark;
+            qrTitleOutput.style.display = titleText === "" ? "none" : "block";
+
+            qrTextOutput.innerText = textBelow;
+            qrTextOutput.style.color = colorDark;
+            qrTextOutput.style.display = textBelow === "" ? "none" : "block";
+
+            // Aplicar fondos chidos (Sólidos o Gradientes)
+            if (bgStyle === "solid") {
+                qrCard.style.background = colorLight;
+            } else if (bgStyle === "gradient-pink") {
+                qrCard.style.background = "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)";
+            } else if (bgStyle === "gradient-sunset") {
+                qrCard.style.background = "linear-gradient(135deg, #f83600 0%, #f9d423 100%)";
+            } else if (bgStyle === "gradient-cyber") {
+                qrCard.style.background = "linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)";
+            }
+
+            // Redondeado personalizado
+            qrCard.style.borderRadius = cardRadius;
+
+            // Renderizar QR con estilos avanzados
+            document.getElementById("qrcode").innerHTML = "";
+
+            qrCodeInstance = new QRCodeStyling({
+                width: 230,
+                height: 230,
+                type: "canvas",
+                data: url,
+                margin: marginSize,
+                dotsOptions: {
+                    color: colorDark,
+                    type: dotStyle
+                },
+                backgroundOptions: {
+                    color: "transparent",
+                },
+                cornersSquareOptions: {
+                    type: cornerStyle,
+                    color: colorDark
+                },
+                cornersDotOptions: {
+                    type: cornerStyle === "dot" ? "dot" : "square",
+                    color: colorDark
+                }
+            });
+
+            qrCodeInstance.append(document.getElementById("qrcode"));
+        }
+
+        // Sistema de Anuncios antes de descargar
+        function mostrarAnuncio() {
+            const modal = document.getElementById("ad-modal");
+            const countdownEl = document.getElementById("countdown");
+            let timeLeft = 5;
+
+            modal.style.display = "flex";
+            countdownEl.innerText = timeLeft;
+
+            let timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    modal.style.display = "none";
+                    ejecutarDescarga();
+                }
+            }, 1000);
+        }
+
+        function ejecutarDescarga() {
+            const qrCard = document.getElementById("qr-card");
+            
+            html2canvas(qrCard, {
+                backgroundColor: null,
+                scale: 3
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'qr-udu-pro.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Eventos en tiempo real
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener("input", actualizarQR);
+            element.addEventListener("change", actualizarQR);
+        });
+
+        // Inicializar al cargar
+        window.onload = actualizarQR;
+    </script>
+</body>
+</html>
+
